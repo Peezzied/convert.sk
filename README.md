@@ -6,6 +6,11 @@ Creates a sustainable economy without relaying on jobs, tasks, or quests that re
 ## Usage
 While holding the item, use **/convert add <amount || "all">**, then open the **/convert gui** to complete the transaction (having the money collected).
 
+## Requirements
+* EssentialsX (or any economy provider plugin that use vault api)
+* Skript
+* Vault
+
 ## Features
 Withdrawal of money to item
 Saves the converted item into a variable.
