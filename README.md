@@ -4,7 +4,7 @@ Converts your desired item to economic money and vice versa!
 Creates a sustainable economy without relaying on jobs, tasks, or quests that reqire an another whole system.  Thus, it's easy source of income.
 
 ## USAGE
-While holding the item, use /convert add <amount || "all">, then open the /convert gui to complete the transaction (having the money collected).
+While holding the item, use **/convert add <amount || "all">**, then open the **/convert gui** to complete the transaction (having the money collected).
 
 ## Features
 Withdrawal of money to item
