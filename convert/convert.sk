@@ -17,12 +17,7 @@ function cdaily(p: player):
 
 function guide(p: player, type: integer):
     if {_type} is 1:
-        set {_a} to a new text component from "&6Use"
-        set {_b} to a new text component from " &c&l/convert gui "
-        set {_c} to a new text component from "&6to complete the transaction."
-        set hover event of {_b} to a new hover event showing "Click to use /convert gui."
-        set click event of {_b} to a new click event to suggest command "/convert gui"
-        send component {_a}, {_b}, {_c} to {_p}
+        send "&6Use <command:/convert gui>&c&l/convert gui<reset> &6to complete the transaction." to {_p}
 on join:
     if {balance::%player%} is set:
         if {balance::%player%} > 0:
@@ -178,11 +173,3 @@ on inventory click:
             else:
                 message "&6You do not have a &ctransaction &6to be canceled."
             close player's inventory
-
-
-on tab complete of "convert" and "cc":
-    set tab completions for position 1 to "?", "help", "add", "withdraw", "cancel", "balance" and "gui"
-    if tab arg-1 is "add":
-        set tab completions for position 2 to "5"
-    if {balance::%player%} is not set:
-        remove "cancel" from tab completions
