@@ -154,9 +154,9 @@ on inventory click:
             
             if {balance::%player%} is set:
                 message "&6You have receive &c&l%{balance::%player%}% &6to your balance"
-                make player execute "/balance"
                 add {balance::%player%} to {_amt}
                 add {_amt} to balance of player
+                make player execute "/balance"
                 clear {balance::%player%}
                 clear {_amt}
             else:
