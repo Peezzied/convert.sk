@@ -1,6 +1,6 @@
 options:
     item: diamond #item for exchange (e.g. it's diamond)
-    amount: 1 #change the conversion amount for item to money (e.g. 1 diamond = $1. set the amount to 1 as if it's $1)
+    amount: 1 #change the conversion amount for the item to money (e.g. 1 diamond = $1. set the amount to 1 as if it's $1)
     
 variables:
     {amt} = 10
