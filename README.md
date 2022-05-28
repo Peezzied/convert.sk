@@ -15,10 +15,10 @@ Custom configuration.
 The transaction cannot be completed if the player's inventory doesn't have space for it.
 
 ## Commands
-/convert add <amount or "all"> - converts the item to diamond while holding the item.__
-/convert gui - where the transaction to be completed.__
-/convert cancel - cancel the transaction.__
-/convert withdraw <amount> - converts the player's balance to item.__
-/convert balance - checks the player's balance.__
-/convert help - all command information.__
+/convert add <amount or "all"> - converts the item to diamond while holding the item.\
+/convert gui - where the transaction to be completed.\
+/convert cancel - cancel the transaction.\
+/convert withdraw <amount> - converts the player's balance to item.\
+/convert balance - checks the player's balance.\
+/convert help - all command information.\
 
