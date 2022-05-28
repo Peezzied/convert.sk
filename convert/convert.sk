@@ -1,0 +1,175 @@
+variables:
+    {amt} = 10
+function cgui(p: player):
+    set metadata tag "cGui" of {_p} to chest inventory with 1 row named "Bank"
+    set slot 3 of metadata tag "cGui" of {_p} to sunflower named "&eBalance" with lore "&7Click to check balance.%nl%&7You have &c%{_p}'s balance%"
+    set slot 4 of metadata tag "cGui" of {_p} to 1 of diamonds named "&bReceive" with lore "&7Click to claim."
+    set slot 5 of metadata tag "cGui" of {_p} to 1 of barrier named "&cCancel" with lore "&7Click to cancel transaction."
+    play sound "block.chest.open" with volume 10 to {_p}
+    open (metadata tag "cGui" of {_p}) to {_p}
+
+function cdaily(p: player):
+    set metadata tag "cdaily" of {_p} to chest inventory with 1 row named "&3Daily Income"
+    set slot (all integers between 0 and 9) of metadata tag "cdaily" of {_p} to black stained glass pane named " "
+    set slot 4 of metadata tag "cdaily" of {_p} to 5 of diamonds
+    play sound "block.chest.open" with volume 10 to {_p}
+    open (metadata tag "cdaily" of {_p}) to {_p}
+
+function guide(p: player, type: integer):
+    if {_type} is 1:
+        send "&6Use <command:/convert gui>&c&l/convert gui<reset> &6to complete the transaction." to {_p}
+on join:
+    if {balance::%player%} is set:
+        if {balance::%player%} > 0:
+            play sound "entity.player.levelup" to player
+            message "&6You have a &ctransaction &6to be complete."
+            guide(player, 1)
+
+function convertForce(p: player):
+    make {_p} execute "/convert help"
+    
+
+command /convert [<string>] [<string>]:
+    usage: &6Convert diamonds to economy money. Use &c/convert help
+    executable by: player
+    permission: convert
+    permission message: &cYou do not have permission!
+    aliases: cc
+    description: Convert diamonds to economy money.
+    trigger:
+        set {_i} to arg-2 parsed as integer
+        set {_ii} to arg-2
+        set {_algo} to item amount of player's tool
+        set {_bal} to player's balance  
+        
+        if arg-1 is not set:
+            convertForce(player)
+            stop trigger
+        if arg-1 is not "?", "help", "add", "withdraw", "cancel", "balance" or "gui":
+            convertForce(player)
+            stop trigger
+
+        if arg-1 is "add":
+            if {_ii} is "all":
+                if 1 of player's held item is a diamond:
+                    if item amount of player's tool >= 5:
+                        set {_toolamt} to item amount of player's tool
+                        remove {_toolamt} of diamonds from player's tool
+                        add {_toolamt} to {balance::%player%}
+                        guide(player, 1)
+                        play sound "entity.player.levelup" to player
+                        wait a tick
+                        clear {algorithm::%player%}
+                        stop trigger
+                    else if item amount of player's tool < 5:
+                        message "&6To send diamonds, you must have atleast up to &c5 diamonds"
+                        play sound "block.basalt.fall" with volume 10 to player
+                        stop trigger
+                else:
+                    message "&6This is not diamonds nor not enough diamonds."
+                    message "&6To send diamonds, you must have atleast up to &c5 diamonds."
+                    play sound "block.basalt.fall" with volume 10 to player
+                    stop trigger
+            if 1 of player's held item is a diamond:
+                if item amount of player's tool >= 5:
+                    if {_i} >= 5:
+                        add {_i} to {algorithm::%player%}
+                        if {_algo} is less than {algorithm::%player%}:
+                            message "&6You must not exceed to amount of your &cdiamonds&6!"
+                            play sound "block.basalt.fall" with volume 10 to player
+                            clear {algorithm::%player%}
+                            stop trigger
+                        if {_algo} >= {algorithm::%player%}:
+                            remove {_i} of diamonds from player's tool
+                            add {_i} to {balance::%player%}
+                            guide(player, 1)
+                            play sound "entity.player.levelup" to player
+                            wait a tick
+                            clear {algorithm::%player%}
+                    else if {_i} < 5:
+                        message "&6To send diamonds, you must have atleast up to &c5 diamonds"
+                        play sound "block.basalt.fall" with volume 10 to player
+                        stop trigger   
+                else if item amount of player's tool < 5:
+                    message "&6To send diamonds, you must have atleast up to &c5 diamonds"
+                    play sound "block.basalt.fall" with volume 10 to player
+                    stop trigger
+            else:
+                message "&6This is not diamonds nor not enough diamonds."
+                message "&6To send diamonds, you must have atleast up to &c5 diamonds."
+                play sound "block.basalt.fall" with volume 10 to player
+                stop trigger
+        if arg-1 is "cancel":
+            play sound "entity.player.levelup" to player
+            give player {balance::%player%} of diamonds
+            clear {balance::%player%}
+        if arg-1 is "withdraw":
+            if inventory of player doesn't have enough space for diamonds:
+                play sound "block.basalt.fall" with volume 10 to player
+                send "&6Not enough space for &cdiamonds&6. Check your inventory if it is full."
+                stop trigger
+            add {_i} to {algorithm::%player%}
+            #broadcast "%{_bal}% %{algorithm::%player%}%"
+            if {_bal} is less than {algorithm::%player%}:
+                message "&6You must not exceed to the amount of your &cbalance&6!"
+                play sound "block.basalt.fall" with volume 10 to player
+                clear {algorithm::%player%}
+                stop trigger
+            if {_bal} is more than or equal to {algorithm::%player%}:
+                remove {_i} from player's balance
+                give player {_i} of diamonds
+                message "&c&l$%{_i}% &6has been withdrew from your account's balance."
+                make player execute "/balance"
+                play sound "entity.player.levelup" to player
+                
+                clear {algorithm::%player%}
+        if arg-1 is "gui":
+            cgui(player)
+        if arg-1 is "balance":
+            make player execute "/balance"
+            
+        if arg-1 is "help" or "?":
+            send "&2&lEconomy | Convert v1.0 - Peezzied"
+            send "&6Convert your diamonds to economy money."
+            send "&6The server uses: &oVault, TheNewEconomy, ChestShop"
+            send "  &r• &6Use &c/convert add <amount> &6while holding diamonds."
+            send "  &r• &6Use &c/convert withdraw <amount> &6convert balance to diamonds."
+            send "  &r• &6Use &c/convert balance &6to check balance."
+            send "  &r• &6Use &c/convert gui &6to open gui — claim money."
+            send "&6&lGUI &6- used to check balance, &ncomplete transaction&6, and cancel transaction"
+            
+
+on inventory close:
+    if event-inventory is (metadata tag "cGui" of player):
+        play sound "block.chest.close" with volume 10 to player 
+
+
+on inventory click:
+    if event-inventory is (metadata tag "cGui" of player):
+        if index of event-slot is 4:
+            cancel event
+            play sound "entity.experience_orb.pickup" with volume 10 to player
+            
+            if {balance::%player%} is set:
+                message "&6You have receive &c&l%{balance::%player%}% &6to your balance"
+                make player execute "/balance"
+                add {balance::%player%} to {_amt}
+                add {_amt} to balance of player
+                clear {balance::%player%}
+                clear {_amt}
+            else:
+                message "&6You do not have a &ctransaction &6to be processed."
+            close player's inventory
+        if index of event-slot is 3:
+            cancel event
+            play sound "entity.experience_orb.pickup" with volume 10 to player
+            make player execute command "/balance"
+            close player's inventory
+        if index of event-slot is 5:
+            if {balance::%player%} is set:
+                cancel event
+                make player execute command "/cc cancel"
+                message "&6Transaction Canceled!"
+            else:
+                message "&6You do not have a &ctransaction &6to be canceled."
+            close player's inventory
