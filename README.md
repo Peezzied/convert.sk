@@ -13,6 +13,7 @@ Features -
   On join notification, if the money is not collected.
   Custom configuration.
   The transaction cannot be completed if the player's inventory doesn't have space for it.
+
 Command -
   /convert add <amount or "all"> - converts the item to diamond while holding the item.
   /convert gui - where the transaction to be completed.
