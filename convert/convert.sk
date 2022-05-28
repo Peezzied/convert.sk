@@ -1,6 +1,6 @@
 options:
-    item: diamond #item for exchange (e.g. it's diamond)
-    amount: 1 #change the conversion amount for the item to money (e.g. 1 diamond = $1. set the amount to 1 as if it's $1)
+    item: paper #item for exchange (e.g. it's diamond)
+    amount: 2 #change the conversion amount for item to money (e.g. 1 diamond = $1. set the amount to 1 as if it's $1)
     
 variables:
     {amt} = 10
@@ -151,9 +151,9 @@ on inventory click:
             
             if {balance::%player%} is set:
                 message "&6You have receive &c&l%{balance::%player%}% &6to your balance"
-                make player execute "/balance"
                 add {balance::%player%} to {_amt}
                 add {_amt} to balance of player
+                make player execute "/balance"
                 clear {balance::%player%}
                 clear {_amt}
             else:
